@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+    group: gpg
+  name: prometheus
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        group: gpg
+    spec:
+      containers:
+      - image: prom/prometheus
+        imagePullPolicy: IfNotPresent
+        name: prometheus
+        ports:
+        - containerPort: 9090
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: prom-cm
+          subPath: prometheus.yml
+      restartPolicy: Always
+      volumes:
+      - name: prom-cm
+        configMap:
+          name: prom-cm
+status: {}

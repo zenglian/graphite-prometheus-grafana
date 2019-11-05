@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+    group: gpg
+  name: prometheus
+spec:
+  type: NodePort
+  ports:
+  - name: "9090"
+    port: 9090
+    targetPort: 9090
+    nodePort: 30090
+  selector:
+    app: prometheus
+

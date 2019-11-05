@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: graphite
+    group: gpg
+  name: graphite
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: graphite
+        group: gpg
+    spec:
+      containers:
+      - args:
+        - --graphite.mapping-config=/tmp/graphite_mapping.conf
+        image: prom/graphite-exporter:v0.3.0
+        name: graphite
+        ports:
+        - containerPort: 9108
+        - containerPort: 9109
+        resources: {}
+        volumeMounts:
+        - mountPath: /tmp/graphite_mapping.conf
+          name: prom-cm
+          subPath: graphite_mapping.conf
+      restartPolicy: Always
+      volumes:
+      - name: prom-cm
+        configMap:
+          name: prom-cm
+status: {}
